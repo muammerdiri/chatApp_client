@@ -1,5 +1,7 @@
 package tools;
 
+import java.io.*;
+
 public class Tools {
 
     //! Array concatenation function
@@ -13,5 +15,16 @@ public class Tools {
                 fullText[i] = arr2[i-arr1.length];
         }
         return fullText;
+    }
+
+    /**
+     * Converting file to byte array
+     */
+    public static byte[] fileToByteArray(File file) throws IOException {
+        FileInputStream fl = new FileInputStream(file);
+        byte[] arr = new byte[(int) file.length()];
+        fl.read(arr);
+        fl.close();
+        return arr;
     }
 }
