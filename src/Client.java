@@ -42,6 +42,10 @@ public class Client {
             bufferedWriter.newLine();
             bufferedWriter.flush();
 
+            //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
+
+
+
             bufferedWriter.write(contactPersonName);
             bufferedWriter.newLine();
             bufferedWriter.flush();
