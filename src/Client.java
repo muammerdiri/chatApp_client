@@ -1,3 +1,5 @@
+import tools.Tools;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -42,13 +44,14 @@ public class Client {
             bufferedWriter.newLine();
             bufferedWriter.flush();
 
-            //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
-
-
-
             bufferedWriter.write(contactPersonName);
             bufferedWriter.newLine();
             bufferedWriter.flush();
+
+            //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
+            outputStream.writeInt(Tools.fileToByteArray("PublicKey.pem").length);
+            outputStream.write(Tools.fileToByteArray("PublicKey.pem"));
+            outputStream.flush();
 
             // input için scanner oluşturuldu.
             Scanner scanner = new Scanner(System.in);
