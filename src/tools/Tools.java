@@ -20,7 +20,8 @@ public class Tools {
     /**
      * Converting file to byte array
      */
-    public static byte[] fileToByteArray(File file) throws IOException {
+    public static byte[] fileToByteArray(String path) throws IOException {
+        var file = new File("path");
         FileInputStream fl = new FileInputStream(file);
         byte[] arr = new byte[(int) file.length()];
         fl.read(arr);
