@@ -1,6 +1,9 @@
 package messages;
 
-public interface ISignaturePublicKey extends IMessage {
+import java.security.PrivateKey;
 
+public interface ISignaturePublicKey  {
+    String signatureCommantMessage(byte [] clientPublicKey, PrivateKey serverPrivateKey);
+    byte[] successResponseMessage();
 
 }
