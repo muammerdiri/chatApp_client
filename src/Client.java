@@ -49,8 +49,8 @@ public class Client {
             bufferedWriter.flush();
 
             //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
-            outputStream.writeInt(Tools.fileToByteArray("PublicKey.pem").length);
-            outputStream.write(Tools.fileToByteArray("PublicKey.pem"));
+            outputStream.writeInt(Tools.fileToByteArray("public_key.pem").length);
+            outputStream.write(Tools.fileToByteArray("public_key.pem"));
             outputStream.flush();
 
             // input için scanner oluşturuldu.
