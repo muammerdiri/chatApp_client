@@ -5,16 +5,14 @@ import messages.IHelloCA;
 public class HelloMessageBuilder {
     IHelloCA helloCA;
 
-    public HelloMessageBuilder(IHelloCA helloCA) {
-        this.helloCA = helloCA;
+
+
+    public byte[] commantMessage(byte[] data){
+        return helloCA.commentMessage(data);
     }
 
-    public void commantMessage(byte opcode, int dataLength, byte[] data){
-        helloCA.commentMessage( opcode,  dataLength, data);
-    }
-
-    public void responseMessage(byte opcode, int dataLength, byte[] data){
-        helloCA.successResponseMessage( opcode,  dataLength, data);
+    public byte [] responseMessage(byte opcode, int dataLength, byte[] data){
+        return helloCA.successResponseMessage( opcode,  dataLength, data);
     }
 
     public IHelloCA getHelloCA() {
