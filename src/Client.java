@@ -1,3 +1,7 @@
+import builders.HelloMessageBuilder;
+import builders.SignatureMessageBuilder;
+import messages.HelloCA;
+import messages.SignaturePublicKey;
 import tools.Tools;
 
 import java.io.*;
@@ -21,7 +25,8 @@ public class Client {
     private String contactPersonName;
     private DataInputStream inputStream=null;
     private DataOutputStream outputStream = null;
-
+    private SignatureMessageBuilder signatureMessageBuilder;
+    private HelloMessageBuilder hello;
 
     public Client(Socket socket, String username,String contactPersonName) {
         try {
@@ -32,6 +37,8 @@ public class Client {
             this.bufferedWriter= new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.inputStream = new DataInputStream(socket.getInputStream());
             this.outputStream = new DataOutputStream(socket.getOutputStream());
+            this.signatureMessageBuilder = new SignatureMessageBuilder();
+            this.hello = new HelloMessageBuilder();
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter,inputStream,outputStream);
         }
@@ -49,9 +56,14 @@ public class Client {
             bufferedWriter.flush();
 
             //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
-            outputStream.writeInt(Tools.fileToByteArray("public_key.pem").length);
-            outputStream.write(Tools.fileToByteArray("public_key.pem"));
+            hello.setHelloCA(new HelloCA());
+            byte [] arr = hello.commantMessage(Tools.fileToByteArray("public_key.pem"));
+            outputStream.writeInt(arr.length);
+            outputStream.write(arr);
             outputStream.flush();
+
+            System.out.println("Gönderilen veri: "+ arr);
+
 
             // input için scanner oluşturuldu.
             Scanner scanner = new Scanner(System.in);
