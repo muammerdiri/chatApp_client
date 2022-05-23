@@ -64,6 +64,7 @@ public class Client {
             outputStream.flush();
 
             System.out.println("Gönderilen veri: "+ byteToHex(arr));
+            System.out.println("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
 
 
             // input için scanner oluşturuldu.
@@ -95,9 +96,9 @@ public class Client {
 
                         byte result[] = baos.toByteArray();
 
-                        String res = Arrays.toString(result);
+
                         String string = new String(result,StandardCharsets.UTF_8);
-                        System.out.println("Byte Message: "+res+"\nString Message: "+string);
+                        System.out.println("Byte Message: "+byteToHex(result)+"\nString Message: "+string);
                         System.out.println("/***************************************************");
 
 
