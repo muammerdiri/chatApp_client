@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Formatter;
 import java.util.Scanner;
 
 /**
@@ -62,7 +63,7 @@ public class Client {
             outputStream.write(arr);
             outputStream.flush();
 
-            System.out.println("Gönderilen veri: "+ arr);
+            System.out.println("Gönderilen veri: "+ byteToHex(arr));
 
 
             // input için scanner oluşturuldu.
@@ -132,6 +133,16 @@ public class Client {
         }
     }
 
-
+    String byteToHex(final byte[] hash)
+    {
+        Formatter formatter = new Formatter();
+        for (byte b : hash)
+        {
+            formatter.format("%02x ", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
+    }
 
 }
