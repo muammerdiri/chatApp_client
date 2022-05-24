@@ -1,5 +1,3 @@
-import builders.HelloMessageBuilder;
-import builders.SignatureMessageBuilder;
 import messages.HelloCA;
 import messages.SignaturePublicKey;
 import tools.Tools;
@@ -7,7 +5,6 @@ import tools.Tools;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Scanner;
 
@@ -26,8 +23,8 @@ public class Client {
     private String contactPersonName;
     private DataInputStream inputStream=null;
     private DataOutputStream outputStream = null;
-    private SignatureMessageBuilder signatureMessageBuilder;
-    private HelloMessageBuilder hello;
+    private SignaturePublicKey signatureMessageBuilder;
+    private HelloCA hello;
 
     public Client(Socket socket, String username,String contactPersonName) {
         try {
@@ -38,8 +35,8 @@ public class Client {
             this.bufferedWriter= new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.inputStream = new DataInputStream(socket.getInputStream());
             this.outputStream = new DataOutputStream(socket.getOutputStream());
-            this.signatureMessageBuilder = new SignatureMessageBuilder();
-            this.hello = new HelloMessageBuilder();
+            this.signatureMessageBuilder = new SignaturePublicKey();
+            this.hello = new HelloCA();
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter,inputStream,outputStream);
         }
@@ -57,7 +54,7 @@ public class Client {
             bufferedWriter.flush();
 
             //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
-            hello.setHelloCA(new HelloCA());
+
             byte [] arr = hello.commantMessage(Tools.fileToByteArray("public_key.pem"));
             outputStream.writeInt(arr.length);
             outputStream.write(arr);
@@ -86,7 +83,6 @@ public class Client {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String msgFromGroupChat;
 
                 while (socket.isConnected()) {
                     try {
