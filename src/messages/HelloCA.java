@@ -5,16 +5,15 @@ package messages;//import crypto.helper.tools.ProtocolName;
 
 import java.nio.ByteBuffer;
 
-public class HelloCA implements IHelloCA{
+public class HelloCA  {
 
 
-    @Override
     public byte[] successResponseMessage(byte opcode, int dataLength, byte[] data) {
         return new byte[0];
     }
 
-    @Override
-    public byte[] commentMessage(byte[] data) {
+
+    public byte[] commantMessage(byte[] data) {
         //Main array = { header +opcode + Length + Data }
         byte [] responseData ={tools.ProtocolName.COMMAND_HEADER,tools.ProtocolName.HELLO,0x00};
 
