@@ -18,8 +18,8 @@ import java.util.Scanner;
 public class Client {
 
     private SSLSocket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+//    private BufferedReader bufferedReader;
+//    private BufferedWriter bufferedWriter;
     private String username;
     private String contactPersonName;
     private DataInputStream inputStream=null;
@@ -32,50 +32,36 @@ public class Client {
             this.socket = socket;
             this.username = username;
             this.contactPersonName = contactPersonName;
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.bufferedWriter= new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+//            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            this.bufferedWriter= new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.inputStream = new DataInputStream(socket.getInputStream());
             this.outputStream = new DataOutputStream(socket.getOutputStream());
             this.signatureMessageBuilder = new SignaturePublicKey();
             this.hello = new HelloCA();
         } catch (IOException e) {
-            closeEverything(socket, bufferedReader, bufferedWriter,inputStream,outputStream);
+            closeEverything(socket,inputStream,outputStream);
         }
     }
     //! Message sending function.
     public void sendMessage() {
         try {
             // İlk olarak kullanıcı adı gönderiliyor
-            bufferedWriter.write(username);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-
-            bufferedWriter.write(contactPersonName);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-
-            //! Server'a PublicKey'i imzalatma kodlarını buraya yaz.
-
-            byte [] arr = hello.commantMessage(Tools.fileToByteArray("public_key.pem"));
-            outputStream.writeInt(arr.length);
-            outputStream.write(arr);
+            outputStream.writeUTF(username);
             outputStream.flush();
-
-            System.out.println("Gönderilen veri: "+ byteToHex(arr));
-            System.out.println("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
-
+            outputStream.writeUTF(contactPersonName);
+            outputStream.flush();
 
             // input için scanner oluşturuldu.
             Scanner scanner = new Scanner(System.in);
 
             while (socket.isConnected()) {
+                System.out.println("Mesajınız: ");
                 String message = scanner.nextLine();
-                outputStream.writeInt(message.length());
-                outputStream.write(message.getBytes(StandardCharsets.UTF_8));
+                outputStream.writeUTF(message);
 
             }
         } catch (IOException e) {
-            closeEverything(socket, bufferedReader, bufferedWriter,inputStream,outputStream);
+            closeEverything(socket, inputStream,outputStream);
         }
     }
 
@@ -87,20 +73,15 @@ public class Client {
 
                 while (socket.isConnected()) {
                     try {
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        byte buffer[] = new byte[1024];
-                        baos.write(buffer, 0 , inputStream.read(buffer));
 
-                        byte result[] = baos.toByteArray();
+                        String recivedMessage = inputStream.readUTF();
+                        System.err.println(contactPersonName+" Gelen Mesaj: "+ recivedMessage);
 
-
-                        String string = new String(result,StandardCharsets.UTF_8);
-                        System.out.println("Byte Message: "+byteToHex(result)+"\nString Message: "+string);
-                        System.out.println("/***************************************************");
-
-
+                        if(recivedMessage.equals("close")) {
+                            closeEverything(socket,inputStream,outputStream);
+                        }
                     }catch (IOException e){
-                        closeEverything(socket, bufferedReader, bufferedWriter,inputStream,outputStream);
+                        closeEverything(socket,inputStream,outputStream);
 
                     }
                 }
@@ -110,14 +91,9 @@ public class Client {
 
 
     //! Function to close all builds.
-    public void closeEverything(SSLSocket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter,InputStream in,OutputStream out) {
+    public void closeEverything(SSLSocket socket, InputStream in,OutputStream out) {
         try {
-            if (bufferedReader != null) {
-                bufferedReader.close();
-            }
-            if (bufferedWriter != null) {
-                bufferedWriter.close();
-            }
+
             if (socket != null) {
                 socket.close();
             }
@@ -130,17 +106,6 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    String byteToHex(final byte[] hash)
-    {
-        Formatter formatter = new Formatter();
-        for (byte b : hash)
-        {
-            formatter.format("%02x ", b);
-        }
-        String result = formatter.toString();
-        formatter.close();
-        return result;
-    }
+    
 
 }
