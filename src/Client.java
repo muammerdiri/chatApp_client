@@ -2,6 +2,7 @@ import messages.HelloCA;
 import messages.SignaturePublicKey;
 import tools.Tools;
 
+import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +17,7 @@ import java.util.Scanner;
 
 public class Client {
 
-    private Socket socket;
+    private SSLSocket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String username;
@@ -26,7 +27,7 @@ public class Client {
     private SignaturePublicKey signatureMessageBuilder;
     private HelloCA hello;
 
-    public Client(Socket socket, String username,String contactPersonName) {
+    public Client(SSLSocket socket, String username,String contactPersonName) {
         try {
             this.socket = socket;
             this.username = username;
@@ -109,7 +110,7 @@ public class Client {
 
 
     //! Function to close all builds.
-    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter,InputStream in,OutputStream out) {
+    public void closeEverything(SSLSocket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter,InputStream in,OutputStream out) {
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
